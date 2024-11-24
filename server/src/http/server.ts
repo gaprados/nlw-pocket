@@ -15,6 +15,7 @@ import { fastifyJwt } from '@fastify/jwt'
 import { fastifySwaggerUi } from '@fastify/swagger-ui'
 import { authenticateFromGithubRoute } from './routes/authenticate-from-github'
 import { env } from '../env'
+import { getProfileRoute } from './routes/get-profile'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -44,8 +45,11 @@ app.register(fastifySwaggerUi, {
   routePrefix: '/docs',
 })
 
+// AUTH ROUTES
 app.register(authenticateFromGithubRoute)
+app.register(getProfileRoute)
 
+// GOALS ROUTES
 app.register(createGoalRoute)
 app.register(createCompletionRoute)
 app.register(getPendingGoalsRoute)
