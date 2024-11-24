@@ -29,8 +29,9 @@ export const getWeekSummaryRoute: FastifyPluginAsyncZod = async app => {
         },
       },
     },
-    async (_request, reply) => {
-      const { summary } = await getWeekSummary()
+    async (request, reply) => {
+      const userId = request.user.sub
+      const { summary } = await getWeekSummary({ userId })
 
       return reply.send(summary)
     }
