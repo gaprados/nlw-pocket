@@ -12,6 +12,7 @@ import { getWeekSummaryRoute } from './routes/get-week-summary'
 import { fastifyCors } from '@fastify/cors'
 import { fastifySwagger } from '@fastify/swagger'
 import { fastifySwaggerUi } from '@fastify/swagger-ui'
+import { authenticateFromGithubRoute } from './routes/authenticate-from-github'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -36,6 +37,8 @@ app.register(fastifySwagger, {
 app.register(fastifySwaggerUi, {
   routePrefix: '/docs',
 })
+
+app.register(authenticateFromGithubRoute)
 
 app.register(createGoalRoute)
 app.register(createCompletionRoute)
