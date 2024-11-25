@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
-import { GetUser } from '../../services/get-user'
+import { getUser } from '../../services/get-user'
 
 export const getProfileRoute: FastifyPluginAsyncZod = async app => {
   app.get(
@@ -23,7 +23,7 @@ export const getProfileRoute: FastifyPluginAsyncZod = async app => {
     },
     async (request, reply) => {
       const userId = request.user.sub
-      const { user } = await GetUser({
+      const { user } = await getUser({
         userId,
       })
 

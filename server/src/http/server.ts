@@ -16,6 +16,7 @@ import { fastifySwaggerUi } from '@fastify/swagger-ui'
 import { authenticateFromGithubRoute } from './routes/authenticate-from-github'
 import { env } from '../env'
 import { getProfileRoute } from './routes/get-profile'
+import { getUserExperienceAndLevelRoute } from './routes/get-user-experience-and-level'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -54,6 +55,9 @@ app.register(createGoalRoute)
 app.register(createCompletionRoute)
 app.register(getPendingGoalsRoute)
 app.register(getWeekSummaryRoute)
+
+// GAMIFICATION ROUTES
+app.register(getUserExperienceAndLevelRoute)
 
 app
   .listen({
