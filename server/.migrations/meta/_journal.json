@@ -8,6 +8,27 @@
       "when": 1725926741047,
       "tag": "0000_little_risque",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1732407443265,
+      "tag": "0001_cloudy_secret_warriors",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1732407529766,
+      "tag": "0002_nappy_virginia_dare",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1732541058148,
+      "tag": "0003_dear_talos",
+      "breakpoints": true
     }
   ]
 }
