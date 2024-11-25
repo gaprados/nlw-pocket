@@ -6,7 +6,7 @@ interface GetUserRequest {
   userId: string
 }
 
-export async function GetUser({ userId }: GetUserRequest) {
+export async function getUser({ userId }: GetUserRequest) {
   const result = await db
     .select({
       id: users.id,
