@@ -4,7 +4,10 @@
  * in.orbit
  * OpenAPI spec version: 1.0.0
  */
-import { useMutation, useQuery } from '@tanstack/react-query'
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query'
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -16,899 +19,662 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
+  UseQueryResult
 } from '@tanstack/react-query'
+import { http } from '../client';
 export type GetUserExperienceAndLevel200 = {
-  experience: number
-  experienceToNextLevel: number
-  level: number
-}
+  experience: number;
+  experienceToNextLevel: number;
+  level: number;
+};
 
 export type GetWeekSummary200GoalsPerDayItem = {
-  completedAt: string
-  id: string
-  title: string
-}
-
-export type GetWeekSummary200GoalsPerDay = {
-  [key: string]: GetWeekSummary200GoalsPerDayItem[]
-}
-
-export type GetWeekSummary200 = {
-  completed: number
-  goalsPerDay: GetWeekSummary200GoalsPerDay
-  total: number
-}
-
-export type GetWeekSummaryParams = {
-  weekStartsAt?: string
-}
-
-export type GetPendingGoals200PendingGoalsItem = {
-  completionCount: number
-  desiredWeeklyFrequency: number
-  id: string
-  title: string
-}
-
-export type GetPendingGoals200 = {
-  pendingGoals: GetPendingGoals200PendingGoalsItem[]
-}
+  completedAt: string;
+  id: string;
+  title: string;
+};
 
 /**
  * @nullable
  */
-export type CreateCompletion201 =
-  | (typeof CreateCompletion201)[keyof typeof CreateCompletion201]
-  | null
+export type GetWeekSummary200GoalsPerDay = {[key: string]: GetWeekSummary200GoalsPerDayItem[]} | null;
+
+export type GetWeekSummary200 = {
+  completed: number;
+  /** @nullable */
+  goalsPerDay: GetWeekSummary200GoalsPerDay;
+  /** @nullable */
+  total: number | null;
+};
+
+export type GetWeekSummaryParams = {
+weekStartsAt?: string;
+};
+
+export type GetPendingGoals200PendingGoalsItem = {
+  completionCount: number;
+  desiredWeeklyFrequency: number;
+  id: string;
+  title: string;
+};
+
+export type GetPendingGoals200 = {
+  pendingGoals: GetPendingGoals200PendingGoalsItem[];
+};
+
+/**
+ * @nullable
+ */
+export type CreateCompletion201 = typeof CreateCompletion201[keyof typeof CreateCompletion201] | null;
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateCompletion201 = {
   null: 'null',
-} as const
+} as const;
 
 export type CreateCompletionBody = {
-  goalId: string
-}
+  goalId: string;
+};
 
 /**
  * @nullable
  */
-export type CreateGoal201 =
-  | (typeof CreateGoal201)[keyof typeof CreateGoal201]
-  | null
+export type CreateGoal201 = typeof CreateGoal201[keyof typeof CreateGoal201] | null;
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateGoal201 = {
   null: 'null',
-} as const
+} as const;
 
 export type CreateGoalBody = {
   /**
    * @minimum 1
    * @maximum 7
    */
-  desiredWeeklyFrequency: number
-  title: string
-}
+  desiredWeeklyFrequency: number;
+  title: string;
+};
 
 export type GetProfile200Profile = {
-  avatarUrl: string
+  avatarUrl: string;
   /** @nullable */
-  email: string | null
-  id: string
+  email: string | null;
+  id: string;
   /** @nullable */
-  name: string | null
-}
+  name: string | null;
+};
 
 export type GetProfile200 = {
-  profile: GetProfile200Profile
-}
+  profile: GetProfile200Profile;
+};
 
 export type AuthenticateFromGithub201 = {
-  token: string
-}
+  token: string;
+};
 
 export type AuthenticateFromGithubBody = {
-  code: string
-}
+  code: string;
+};
+
+
+
+
+type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
+
 
 /**
  * Authenticate user from Github code
  */
-export type authenticateFromGithubResponse = {
-  data: AuthenticateFromGithub201
-  status: number
-  headers: Headers
-}
-
 export const getAuthenticateFromGithubUrl = () => {
+
+
   return `http://localhost:3333/auth/github`
 }
 
-export const authenticateFromGithub = async (
-  authenticateFromGithubBody: AuthenticateFromGithubBody,
-  options?: RequestInit
-): Promise<authenticateFromGithubResponse> => {
-  const res = await fetch(getAuthenticateFromGithubUrl(), {
+export const authenticateFromGithub = async (authenticateFromGithubBody: AuthenticateFromGithubBody, options?: RequestInit): Promise<AuthenticateFromGithub201> => {
+  
+  return http<Promise<AuthenticateFromGithub201>>(getAuthenticateFromGithubUrl(),
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(authenticateFromGithubBody),
-  })
-  const data = await res.json()
-
-  return { status: res.status, data, headers: res.headers }
-}
-
-export const getAuthenticateFromGithubMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof authenticateFromGithub>>,
-    TError,
-    { data: AuthenticateFromGithubBody },
-    TContext
-  >
-  fetch?: RequestInit
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof authenticateFromGithub>>,
-  TError,
-  { data: AuthenticateFromGithubBody },
-  TContext
-> => {
-  const { mutation: mutationOptions, fetch: fetchOptions } = options ?? {}
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof authenticateFromGithub>>,
-    { data: AuthenticateFromGithubBody }
-  > = props => {
-    const { data } = props ?? {}
-
-    return authenticateFromGithub(data, fetchOptions)
+    body: JSON.stringify(
+      authenticateFromGithubBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type AuthenticateFromGithubMutationResult = NonNullable<
-  Awaited<ReturnType<typeof authenticateFromGithub>>
->
-export type AuthenticateFromGithubMutationBody = AuthenticateFromGithubBody
-export type AuthenticateFromGithubMutationError = unknown
 
-export const useAuthenticateFromGithub = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof authenticateFromGithub>>,
-    TError,
-    { data: AuthenticateFromGithubBody },
-    TContext
-  >
-  fetch?: RequestInit
-}): UseMutationResult<
-  Awaited<ReturnType<typeof authenticateFromGithub>>,
-  TError,
-  { data: AuthenticateFromGithubBody },
-  TContext
-> => {
-  const mutationOptions = getAuthenticateFromGithubMutationOptions(options)
 
-  return useMutation(mutationOptions)
-}
+export const getAuthenticateFromGithubMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authenticateFromGithub>>, TError,{data: AuthenticateFromGithubBody}, TContext>, request?: SecondParameter<typeof http>}
+): UseMutationOptions<Awaited<ReturnType<typeof authenticateFromGithub>>, TError,{data: AuthenticateFromGithubBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof authenticateFromGithub>>, {data: AuthenticateFromGithubBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  authenticateFromGithub(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AuthenticateFromGithubMutationResult = NonNullable<Awaited<ReturnType<typeof authenticateFromGithub>>>
+    export type AuthenticateFromGithubMutationBody = AuthenticateFromGithubBody
+    export type AuthenticateFromGithubMutationError = unknown
+
+    export const useAuthenticateFromGithub = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authenticateFromGithub>>, TError,{data: AuthenticateFromGithubBody}, TContext>, request?: SecondParameter<typeof http>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof authenticateFromGithub>>,
+        TError,
+        {data: AuthenticateFromGithubBody},
+        TContext
+      > => {
+
+      const mutationOptions = getAuthenticateFromGithubMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
 /**
  * Get authenticated profile
  */
-export type getProfileResponse = {
-  data: GetProfile200
-  status: number
-  headers: Headers
-}
-
 export const getGetProfileUrl = () => {
+
+
   return `http://localhost:3333/profile`
 }
 
-export const getProfile = async (
-  options?: RequestInit
-): Promise<getProfileResponse> => {
-  const res = await fetch(getGetProfileUrl(), {
+export const getProfile = async ( options?: RequestInit): Promise<GetProfile200> => {
+  
+  return http<Promise<GetProfile200>>(getGetProfileUrl(),
+  {      
     ...options,
-    method: 'GET',
-  })
-  const data = await res.json()
+    method: 'GET'
+    
+    
+  }
+);}
 
-  return { status: res.status, data, headers: res.headers }
-}
+
 
 export const getGetProfileQueryKey = () => {
-  return [`http://localhost:3333/profile`] as const
+    return [`http://localhost:3333/profile`] as const;
+    }
+
+    
+export const getGetProfileQueryOptions = <TData = Awaited<ReturnType<typeof getProfile>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>>, request?: SecondParameter<typeof http>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetProfileQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProfile>>> = ({ signal }) => getProfile({ signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData> & { queryKey: DataTag<QueryKey, TData> }
 }
 
-export const getGetProfileQueryOptions = <
-  TData = Awaited<ReturnType<typeof getProfile>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>
-  >
-  fetch?: RequestInit
-}) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {}
-
-  const queryKey = queryOptions?.queryKey ?? getGetProfileQueryKey()
-
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getProfile>>> = ({
-    signal,
-  }) => getProfile({ signal, ...fetchOptions })
-
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getProfile>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData> }
-}
-
-export type GetProfileQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getProfile>>
->
+export type GetProfileQueryResult = NonNullable<Awaited<ReturnType<typeof getProfile>>>
 export type GetProfileQueryError = unknown
 
-export function useGetProfile<
-  TData = Awaited<ReturnType<typeof getProfile>>,
-  TError = unknown,
->(options: {
-  query: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>
-  > &
-    Pick<
-      DefinedInitialDataOptions<
-        Awaited<ReturnType<typeof getProfile>>,
-        TError,
-        TData
-      >,
-      'initialData'
-    >
-  fetch?: RequestInit
-}): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData>
-}
-export function useGetProfile<
-  TData = Awaited<ReturnType<typeof getProfile>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>
-  > &
-    Pick<
-      UndefinedInitialDataOptions<
-        Awaited<ReturnType<typeof getProfile>>,
-        TError,
-        TData
-      >,
-      'initialData'
-    >
-  fetch?: RequestInit
-}): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useGetProfile<
-  TData = Awaited<ReturnType<typeof getProfile>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>
-  >
-  fetch?: RequestInit
-}): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
 
-export function useGetProfile<
-  TData = Awaited<ReturnType<typeof getProfile>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>
-  >
-  fetch?: RequestInit
-}): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+export function useGetProfile<TData = Awaited<ReturnType<typeof getProfile>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getProfile>>,
+          TError,
+          TData
+        > , 'initialData'
+      >, request?: SecondParameter<typeof http>}
+
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetProfile<TData = Awaited<ReturnType<typeof getProfile>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getProfile>>,
+          TError,
+          TData
+        > , 'initialData'
+      >, request?: SecondParameter<typeof http>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetProfile<TData = Awaited<ReturnType<typeof getProfile>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>>, request?: SecondParameter<typeof http>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+
+export function useGetProfile<TData = Awaited<ReturnType<typeof getProfile>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>>, request?: SecondParameter<typeof http>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+
   const queryOptions = getGetProfileQueryOptions(options)
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData>
-  }
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
 
-  query.queryKey = queryOptions.queryKey
+  query.queryKey = queryOptions.queryKey ;
 
-  return query
+  return query;
 }
+
+
+
 
 /**
  * Create a goal
  */
-export type createGoalResponse = {
-  data: CreateGoal201
-  status: number
-  headers: Headers
-}
-
 export const getCreateGoalUrl = () => {
+
+
   return `http://localhost:3333/goals`
 }
 
-export const createGoal = async (
-  createGoalBody: CreateGoalBody,
-  options?: RequestInit
-): Promise<createGoalResponse> => {
-  const res = await fetch(getCreateGoalUrl(), {
+export const createGoal = async (createGoalBody: CreateGoalBody, options?: RequestInit): Promise<CreateGoal201> => {
+  
+  return http<Promise<CreateGoal201>>(getCreateGoalUrl(),
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(createGoalBody),
-  })
-  const data = await res.json()
-
-  return { status: res.status, data, headers: res.headers }
-}
-
-export const getCreateGoalMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createGoal>>,
-    TError,
-    { data: CreateGoalBody },
-    TContext
-  >
-  fetch?: RequestInit
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof createGoal>>,
-  TError,
-  { data: CreateGoalBody },
-  TContext
-> => {
-  const { mutation: mutationOptions, fetch: fetchOptions } = options ?? {}
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof createGoal>>,
-    { data: CreateGoalBody }
-  > = props => {
-    const { data } = props ?? {}
-
-    return createGoal(data, fetchOptions)
+    body: JSON.stringify(
+      createGoalBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type CreateGoalMutationResult = NonNullable<
-  Awaited<ReturnType<typeof createGoal>>
->
-export type CreateGoalMutationBody = CreateGoalBody
-export type CreateGoalMutationError = unknown
 
-export const useCreateGoal = <TError = unknown, TContext = unknown>(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createGoal>>,
-    TError,
-    { data: CreateGoalBody },
-    TContext
-  >
-  fetch?: RequestInit
-}): UseMutationResult<
-  Awaited<ReturnType<typeof createGoal>>,
-  TError,
-  { data: CreateGoalBody },
-  TContext
-> => {
-  const mutationOptions = getCreateGoalMutationOptions(options)
 
-  return useMutation(mutationOptions)
-}
+export const getCreateGoalMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGoal>>, TError,{data: CreateGoalBody}, TContext>, request?: SecondParameter<typeof http>}
+): UseMutationOptions<Awaited<ReturnType<typeof createGoal>>, TError,{data: CreateGoalBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createGoal>>, {data: CreateGoalBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createGoal(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateGoalMutationResult = NonNullable<Awaited<ReturnType<typeof createGoal>>>
+    export type CreateGoalMutationBody = CreateGoalBody
+    export type CreateGoalMutationError = unknown
+
+    export const useCreateGoal = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGoal>>, TError,{data: CreateGoalBody}, TContext>, request?: SecondParameter<typeof http>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof createGoal>>,
+        TError,
+        {data: CreateGoalBody},
+        TContext
+      > => {
+
+      const mutationOptions = getCreateGoalMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
 /**
  * Complete a goal
  */
-export type createCompletionResponse = {
-  data: CreateCompletion201
-  status: number
-  headers: Headers
-}
-
 export const getCreateCompletionUrl = () => {
+
+
   return `http://localhost:3333/completions`
 }
 
-export const createCompletion = async (
-  createCompletionBody: CreateCompletionBody,
-  options?: RequestInit
-): Promise<createCompletionResponse> => {
-  const res = await fetch(getCreateCompletionUrl(), {
+export const createCompletion = async (createCompletionBody: CreateCompletionBody, options?: RequestInit): Promise<CreateCompletion201> => {
+  
+  return http<Promise<CreateCompletion201>>(getCreateCompletionUrl(),
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(createCompletionBody),
-  })
-  const data = await res.json()
-
-  return { status: res.status, data, headers: res.headers }
-}
-
-export const getCreateCompletionMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createCompletion>>,
-    TError,
-    { data: CreateCompletionBody },
-    TContext
-  >
-  fetch?: RequestInit
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof createCompletion>>,
-  TError,
-  { data: CreateCompletionBody },
-  TContext
-> => {
-  const { mutation: mutationOptions, fetch: fetchOptions } = options ?? {}
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof createCompletion>>,
-    { data: CreateCompletionBody }
-  > = props => {
-    const { data } = props ?? {}
-
-    return createCompletion(data, fetchOptions)
+    body: JSON.stringify(
+      createCompletionBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type CreateCompletionMutationResult = NonNullable<
-  Awaited<ReturnType<typeof createCompletion>>
->
-export type CreateCompletionMutationBody = CreateCompletionBody
-export type CreateCompletionMutationError = unknown
 
-export const useCreateCompletion = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createCompletion>>,
-    TError,
-    { data: CreateCompletionBody },
-    TContext
-  >
-  fetch?: RequestInit
-}): UseMutationResult<
-  Awaited<ReturnType<typeof createCompletion>>,
-  TError,
-  { data: CreateCompletionBody },
-  TContext
-> => {
-  const mutationOptions = getCreateCompletionMutationOptions(options)
 
-  return useMutation(mutationOptions)
-}
+export const getCreateCompletionMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCompletion>>, TError,{data: CreateCompletionBody}, TContext>, request?: SecondParameter<typeof http>}
+): UseMutationOptions<Awaited<ReturnType<typeof createCompletion>>, TError,{data: CreateCompletionBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createCompletion>>, {data: CreateCompletionBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createCompletion(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateCompletionMutationResult = NonNullable<Awaited<ReturnType<typeof createCompletion>>>
+    export type CreateCompletionMutationBody = CreateCompletionBody
+    export type CreateCompletionMutationError = unknown
+
+    export const useCreateCompletion = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCompletion>>, TError,{data: CreateCompletionBody}, TContext>, request?: SecondParameter<typeof http>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof createCompletion>>,
+        TError,
+        {data: CreateCompletionBody},
+        TContext
+      > => {
+
+      const mutationOptions = getCreateCompletionMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
 /**
  * Get pending goals
  */
-export type getPendingGoalsResponse = {
-  data: GetPendingGoals200
-  status: number
-  headers: Headers
-}
-
 export const getGetPendingGoalsUrl = () => {
+
+
   return `http://localhost:3333/pending-goals`
 }
 
-export const getPendingGoals = async (
-  options?: RequestInit
-): Promise<getPendingGoalsResponse> => {
-  const res = await fetch(getGetPendingGoalsUrl(), {
+export const getPendingGoals = async ( options?: RequestInit): Promise<GetPendingGoals200> => {
+  
+  return http<Promise<GetPendingGoals200>>(getGetPendingGoalsUrl(),
+  {      
     ...options,
-    method: 'GET',
-  })
-  const data = await res.json()
+    method: 'GET'
+    
+    
+  }
+);}
 
-  return { status: res.status, data, headers: res.headers }
-}
+
 
 export const getGetPendingGoalsQueryKey = () => {
-  return [`http://localhost:3333/pending-goals`] as const
+    return [`http://localhost:3333/pending-goals`] as const;
+    }
+
+    
+export const getGetPendingGoalsQueryOptions = <TData = Awaited<ReturnType<typeof getPendingGoals>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPendingGoals>>, TError, TData>>, request?: SecondParameter<typeof http>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPendingGoalsQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPendingGoals>>> = ({ signal }) => getPendingGoals({ signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPendingGoals>>, TError, TData> & { queryKey: DataTag<QueryKey, TData> }
 }
 
-export const getGetPendingGoalsQueryOptions = <
-  TData = Awaited<ReturnType<typeof getPendingGoals>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof getPendingGoals>>, TError, TData>
-  >
-  fetch?: RequestInit
-}) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {}
-
-  const queryKey = queryOptions?.queryKey ?? getGetPendingGoalsQueryKey()
-
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getPendingGoals>>> = ({
-    signal,
-  }) => getPendingGoals({ signal, ...fetchOptions })
-
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getPendingGoals>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData> }
-}
-
-export type GetPendingGoalsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getPendingGoals>>
->
+export type GetPendingGoalsQueryResult = NonNullable<Awaited<ReturnType<typeof getPendingGoals>>>
 export type GetPendingGoalsQueryError = unknown
 
-export function useGetPendingGoals<
-  TData = Awaited<ReturnType<typeof getPendingGoals>>,
-  TError = unknown,
->(options: {
-  query: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof getPendingGoals>>, TError, TData>
-  > &
-    Pick<
-      DefinedInitialDataOptions<
-        Awaited<ReturnType<typeof getPendingGoals>>,
-        TError,
-        TData
-      >,
-      'initialData'
-    >
-  fetch?: RequestInit
-}): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData>
-}
-export function useGetPendingGoals<
-  TData = Awaited<ReturnType<typeof getPendingGoals>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof getPendingGoals>>, TError, TData>
-  > &
-    Pick<
-      UndefinedInitialDataOptions<
-        Awaited<ReturnType<typeof getPendingGoals>>,
-        TError,
-        TData
-      >,
-      'initialData'
-    >
-  fetch?: RequestInit
-}): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useGetPendingGoals<
-  TData = Awaited<ReturnType<typeof getPendingGoals>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof getPendingGoals>>, TError, TData>
-  >
-  fetch?: RequestInit
-}): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
 
-export function useGetPendingGoals<
-  TData = Awaited<ReturnType<typeof getPendingGoals>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof getPendingGoals>>, TError, TData>
-  >
-  fetch?: RequestInit
-}): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+export function useGetPendingGoals<TData = Awaited<ReturnType<typeof getPendingGoals>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPendingGoals>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getPendingGoals>>,
+          TError,
+          TData
+        > , 'initialData'
+      >, request?: SecondParameter<typeof http>}
+
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetPendingGoals<TData = Awaited<ReturnType<typeof getPendingGoals>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPendingGoals>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getPendingGoals>>,
+          TError,
+          TData
+        > , 'initialData'
+      >, request?: SecondParameter<typeof http>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetPendingGoals<TData = Awaited<ReturnType<typeof getPendingGoals>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPendingGoals>>, TError, TData>>, request?: SecondParameter<typeof http>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+
+export function useGetPendingGoals<TData = Awaited<ReturnType<typeof getPendingGoals>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPendingGoals>>, TError, TData>>, request?: SecondParameter<typeof http>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+
   const queryOptions = getGetPendingGoalsQueryOptions(options)
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData>
-  }
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
 
-  query.queryKey = queryOptions.queryKey
+  query.queryKey = queryOptions.queryKey ;
 
-  return query
+  return query;
 }
+
+
+
 
 /**
  * Get week summary
  */
-export type getWeekSummaryResponse = {
-  data: GetWeekSummary200
-  status: number
-  headers: Headers
-}
+export const getGetWeekSummaryUrl = (params?: GetWeekSummaryParams,) => {
+  const normalizedParams = new URLSearchParams();
 
-export const getGetWeekSummaryUrl = (params?: GetWeekSummaryParams) => {
-  const normalizedParams = new URLSearchParams()
-
-  // biome-ignore lint/complexity/noForEach: <explanation>
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  return normalizedParams.size
-    ? `http://localhost:3333/summary?${normalizedParams.toString()}`
-    : `http://localhost:3333/summary`
+  return normalizedParams.size ? `http://localhost:3333/summary?${normalizedParams.toString()}` : `http://localhost:3333/summary`
 }
 
-export const getWeekSummary = async (
-  params?: GetWeekSummaryParams,
-  options?: RequestInit
-): Promise<getWeekSummaryResponse> => {
-  const res = await fetch(getGetWeekSummaryUrl(params), {
+export const getWeekSummary = async (params?: GetWeekSummaryParams, options?: RequestInit): Promise<GetWeekSummary200> => {
+  
+  return http<Promise<GetWeekSummary200>>(getGetWeekSummaryUrl(params),
+  {      
     ...options,
-    method: 'GET',
-  })
-  const data = await res.json()
-
-  return { status: res.status, data, headers: res.headers }
-}
-
-export const getGetWeekSummaryQueryKey = (params?: GetWeekSummaryParams) => {
-  return [`http://localhost:3333/summary`, ...(params ? [params] : [])] as const
-}
-
-export const getGetWeekSummaryQueryOptions = <
-  TData = Awaited<ReturnType<typeof getWeekSummary>>,
-  TError = unknown,
->(
-  params?: GetWeekSummaryParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getWeekSummary>>, TError, TData>
-    >
-    fetch?: RequestInit
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getGetWeekSummaryQueryKey = (params?: GetWeekSummaryParams,) => {
+    return [`http://localhost:3333/summary`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getGetWeekSummaryQueryOptions = <TData = Awaited<ReturnType<typeof getWeekSummary>>, TError = unknown>(params?: GetWeekSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWeekSummary>>, TError, TData>>, request?: SecondParameter<typeof http>}
 ) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {}
 
-  const queryKey = queryOptions?.queryKey ?? getGetWeekSummaryQueryKey(params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getWeekSummary>>> = ({
-    signal,
-  }) => getWeekSummary(params, { signal, ...fetchOptions })
+  const queryKey =  queryOptions?.queryKey ?? getGetWeekSummaryQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getWeekSummary>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getWeekSummary>>> = ({ signal }) => getWeekSummary(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getWeekSummary>>, TError, TData> & { queryKey: DataTag<QueryKey, TData> }
 }
 
-export type GetWeekSummaryQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getWeekSummary>>
->
+export type GetWeekSummaryQueryResult = NonNullable<Awaited<ReturnType<typeof getWeekSummary>>>
 export type GetWeekSummaryQueryError = unknown
 
-export function useGetWeekSummary<
-  TData = Awaited<ReturnType<typeof getWeekSummary>>,
-  TError = unknown,
->(
-  params: undefined | GetWeekSummaryParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getWeekSummary>>, TError, TData>
-    > &
-      Pick<
+
+export function useGetWeekSummary<TData = Awaited<ReturnType<typeof getWeekSummary>>, TError = unknown>(
+ params: undefined |  GetWeekSummaryParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWeekSummary>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getWeekSummary>>,
           TError,
           TData
-        >,
-        'initialData'
-      >
-    fetch?: RequestInit
-  }
-): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useGetWeekSummary<
-  TData = Awaited<ReturnType<typeof getWeekSummary>>,
-  TError = unknown,
->(
-  params?: GetWeekSummaryParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getWeekSummary>>, TError, TData>
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof http>}
+
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetWeekSummary<TData = Awaited<ReturnType<typeof getWeekSummary>>, TError = unknown>(
+ params?: GetWeekSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWeekSummary>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getWeekSummary>>,
           TError,
           TData
-        >,
-        'initialData'
-      >
-    fetch?: RequestInit
-  }
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useGetWeekSummary<
-  TData = Awaited<ReturnType<typeof getWeekSummary>>,
-  TError = unknown,
->(
-  params?: GetWeekSummaryParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getWeekSummary>>, TError, TData>
-    >
-    fetch?: RequestInit
-  }
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+        > , 'initialData'
+      >, request?: SecondParameter<typeof http>}
 
-export function useGetWeekSummary<
-  TData = Awaited<ReturnType<typeof getWeekSummary>>,
-  TError = unknown,
->(
-  params?: GetWeekSummaryParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getWeekSummary>>, TError, TData>
-    >
-    fetch?: RequestInit
-  }
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
-  const queryOptions = getGetWeekSummaryQueryOptions(params, options)
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetWeekSummary<TData = Awaited<ReturnType<typeof getWeekSummary>>, TError = unknown>(
+ params?: GetWeekSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWeekSummary>>, TError, TData>>, request?: SecondParameter<typeof http>}
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData>
-  }
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
 
-  query.queryKey = queryOptions.queryKey
+export function useGetWeekSummary<TData = Awaited<ReturnType<typeof getWeekSummary>>, TError = unknown>(
+ params?: GetWeekSummaryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWeekSummary>>, TError, TData>>, request?: SecondParameter<typeof http>}
 
-  return query
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+
+  const queryOptions = getGetWeekSummaryQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
+
 
 /**
  * Get user experience and level
  */
-export type getUserExperienceAndLevelResponse = {
-  data: GetUserExperienceAndLevel200
-  status: number
-  headers: Headers
-}
-
 export const getGetUserExperienceAndLevelUrl = () => {
+
+
   return `http://localhost:3333/profile/gamification`
 }
 
-export const getUserExperienceAndLevel = async (
-  options?: RequestInit
-): Promise<getUserExperienceAndLevelResponse> => {
-  const res = await fetch(getGetUserExperienceAndLevelUrl(), {
+export const getUserExperienceAndLevel = async ( options?: RequestInit): Promise<GetUserExperienceAndLevel200> => {
+  
+  return http<Promise<GetUserExperienceAndLevel200>>(getGetUserExperienceAndLevelUrl(),
+  {      
     ...options,
-    method: 'GET',
-  })
-  const data = await res.json()
+    method: 'GET'
+    
+    
+  }
+);}
 
-  return { status: res.status, data, headers: res.headers }
-}
+
 
 export const getGetUserExperienceAndLevelQueryKey = () => {
-  return [`http://localhost:3333/profile/gamification`] as const
+    return [`http://localhost:3333/profile/gamification`] as const;
+    }
+
+    
+export const getGetUserExperienceAndLevelQueryOptions = <TData = Awaited<ReturnType<typeof getUserExperienceAndLevel>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserExperienceAndLevel>>, TError, TData>>, request?: SecondParameter<typeof http>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetUserExperienceAndLevelQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserExperienceAndLevel>>> = ({ signal }) => getUserExperienceAndLevel({ signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUserExperienceAndLevel>>, TError, TData> & { queryKey: DataTag<QueryKey, TData> }
 }
 
-export const getGetUserExperienceAndLevelQueryOptions = <
-  TData = Awaited<ReturnType<typeof getUserExperienceAndLevel>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof getUserExperienceAndLevel>>,
-      TError,
-      TData
-    >
-  >
-  fetch?: RequestInit
-}) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {}
-
-  const queryKey =
-    queryOptions?.queryKey ?? getGetUserExperienceAndLevelQueryKey()
-
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getUserExperienceAndLevel>>
-  > = ({ signal }) => getUserExperienceAndLevel({ signal, ...fetchOptions })
-
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getUserExperienceAndLevel>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData> }
-}
-
-export type GetUserExperienceAndLevelQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getUserExperienceAndLevel>>
->
+export type GetUserExperienceAndLevelQueryResult = NonNullable<Awaited<ReturnType<typeof getUserExperienceAndLevel>>>
 export type GetUserExperienceAndLevelQueryError = unknown
 
-export function useGetUserExperienceAndLevel<
-  TData = Awaited<ReturnType<typeof getUserExperienceAndLevel>>,
-  TError = unknown,
->(options: {
-  query: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof getUserExperienceAndLevel>>,
-      TError,
-      TData
-    >
-  > &
-    Pick<
-      DefinedInitialDataOptions<
-        Awaited<ReturnType<typeof getUserExperienceAndLevel>>,
-        TError,
-        TData
-      >,
-      'initialData'
-    >
-  fetch?: RequestInit
-}): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData>
-}
-export function useGetUserExperienceAndLevel<
-  TData = Awaited<ReturnType<typeof getUserExperienceAndLevel>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof getUserExperienceAndLevel>>,
-      TError,
-      TData
-    >
-  > &
-    Pick<
-      UndefinedInitialDataOptions<
-        Awaited<ReturnType<typeof getUserExperienceAndLevel>>,
-        TError,
-        TData
-      >,
-      'initialData'
-    >
-  fetch?: RequestInit
-}): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useGetUserExperienceAndLevel<
-  TData = Awaited<ReturnType<typeof getUserExperienceAndLevel>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof getUserExperienceAndLevel>>,
-      TError,
-      TData
-    >
-  >
-  fetch?: RequestInit
-}): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
 
-export function useGetUserExperienceAndLevel<
-  TData = Awaited<ReturnType<typeof getUserExperienceAndLevel>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof getUserExperienceAndLevel>>,
-      TError,
-      TData
-    >
-  >
-  fetch?: RequestInit
-}): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+export function useGetUserExperienceAndLevel<TData = Awaited<ReturnType<typeof getUserExperienceAndLevel>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserExperienceAndLevel>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getUserExperienceAndLevel>>,
+          TError,
+          TData
+        > , 'initialData'
+      >, request?: SecondParameter<typeof http>}
+
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetUserExperienceAndLevel<TData = Awaited<ReturnType<typeof getUserExperienceAndLevel>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserExperienceAndLevel>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getUserExperienceAndLevel>>,
+          TError,
+          TData
+        > , 'initialData'
+      >, request?: SecondParameter<typeof http>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetUserExperienceAndLevel<TData = Awaited<ReturnType<typeof getUserExperienceAndLevel>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserExperienceAndLevel>>, TError, TData>>, request?: SecondParameter<typeof http>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+
+export function useGetUserExperienceAndLevel<TData = Awaited<ReturnType<typeof getUserExperienceAndLevel>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserExperienceAndLevel>>, TError, TData>>, request?: SecondParameter<typeof http>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+
   const queryOptions = getGetUserExperienceAndLevelQueryOptions(options)
 
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData>
-  }
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
 
-  query.queryKey = queryOptions.queryKey
+  query.queryKey = queryOptions.queryKey ;
 
-  return query
+  return query;
 }
+
+
+
+

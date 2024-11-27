@@ -22,17 +22,19 @@ export const getWeekSummaryRoute: FastifyPluginAsyncZod = async app => {
         response: {
           200: z.object({
             completed: z.number(),
-            total: z.number(),
-            goalsPerDay: z.record(
-              z.string(),
-              z.array(
-                z.object({
-                  id: z.string(),
-                  title: z.string(),
-                  completedAt: z.string(),
-                })
+            total: z.number().nullable(),
+            goalsPerDay: z
+              .record(
+                z.string(),
+                z.array(
+                  z.object({
+                    id: z.string(),
+                    title: z.string(),
+                    completedAt: z.string(),
+                  })
+                )
               )
-            ),
+              .nullable(),
           }),
         },
       },
@@ -41,6 +43,8 @@ export const getWeekSummaryRoute: FastifyPluginAsyncZod = async app => {
       const userId = request.user.sub
       const { weekStartsAt } = request.query
       const { summary } = await getWeekSummary({ userId, weekStartsAt })
+
+      console.log(summary)
 
       return reply.send(summary)
     }
